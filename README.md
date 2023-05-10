@@ -8,5 +8,4 @@ it is extensible to draw any other board game (e.g., Go Game).
 - Drawing the board and pieces
 - Enforce the rules of moving pieces
 
-# Feel Free to try it out
-[Game Engine](https://osama-belal.github.io/Game_Engine/)
+## Feel Free to try it out [Game Engine](https://osama-belal.github.io/Game_Engine/)
