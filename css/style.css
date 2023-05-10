@@ -10,16 +10,27 @@ body{
   font-family: 'Righteous', 'Chivo Mono', monospace;
 }
 
-.black{background: #333}
-.grey{background: #CCCCCCFF}
-.white{background: #EEE}
-.cyan{background: #ddf0f3}
-.blue{background: #0086d9}
-.green{background: #63de6e
-}
-
 #board button{border: none}
-#menu button:hover{opacity: .8}
+#board button:hover{opacity: .8}
+i.fas{display: block;transform: translateY(-15px)}
+
+#menu button{
+  border: none;
+  border-radius: 15px;
+  font-size: 2em;
+  color: #333;
+  cursor:pointer;
+  font-family: 'Chivo Mono', sans-serif;
+  box-shadow: 0 0.3em #2e2e2e;
+  background: #ededed;
+  box-sizing: border-box;
+  text-transform: capitalize;
+  font-weight: bolder;
+  transition: all .1s ease-in-out;
+  width: 30%;
+  height: 5em;
+  margin: 10px 0;
+}
 
 #menu{
   width: 80%;
@@ -31,53 +42,45 @@ body{
   gap: 50px 10px;
   align-content: center;
 }
-
-#menu button{
-  border: none;
-  border-radius: 15px;
-  font-size: 2em;
-  color: #333;
-  cursor:pointer;
-  font-family: 'Chivo Mono';
-  box-shadow: 0 0.3em #2e2e2e;
-  background: #ededed;
-  box-sizing: border-box;
-  text-transform: uppercase;
-  font-weight: bolder;
-  transition: all .1s ease-in-out;
-  width: 30%;
-  height: 5em;
-  margin: 10px 0;
-}
-
 #menu button:active{
   box-shadow: 0 0.1em #2e482e;
-  margin: 20px 0 0;
+  transform: translateY(10px);
 }
 
 /*#menu:has(> button:active){*/
 /*    gap: 40px 10px;*/
 /*}*/
 
-#exit, #input{
+.black{background: #333}
+.grey{background: #CCCCCCFF}
+.white{background: #EEE}
+.cyan{background: #ddf0f3}
+.blue{background: #0086d9}
+.green{background: #63de6e
+}
+
+#exit{
   position: absolute;
   bottom: 1em;
+  right: 2em;
   font-size: 1.4em;
   font-family: 'Chivo Mono', sans-serif;
   padding:10px 20px;
-  border-radius: 40px;
+  border-radius: 15px;
   transition: .2s ease-in-out;
+
+  color: #333;
+  cursor:pointer;
+  box-shadow: 0 0.3em #2e2e2e;
+  background: #ededed;
+  font-weight: bolder;
 }
 
-#input:hover,
-#exit:hover{
-  opacity: 1;
-  background: #222;
-  color: #FFF;
+#exit:active{
+  box-shadow: 0 0.1em #2e482e;
+  transform: translateY(10px);
 }
 
-#exit{right: 2em}
-#input{left: 2em}
 
 .tile {
   border: 1px solid lightgray !important;
@@ -109,6 +112,9 @@ body{
 .tic_label{width: 13em;height: 2em;}
 
 
+/*#menu:has(> button:active){*/
+/*    gap: 40px 10px;*/
+/*}*/
 /* ----------------------------- Curtain Effect -------------------------- */
 section{
   width: 100%;
@@ -134,30 +140,27 @@ section{
 input[type=checkbox] {
   position: absolute;
   cursor: pointer;
-  width: 50px;
-  height: 50px;
+  width: 99%;
+  height: 99%;
   border-radius: 50%;
   z-index: 100;
-  /*opacity: 0;*/
-  top: calc(50% - 25px);
-  left: calc(50% - 25px);
-  transition: 1s ease;
+  opacity: 0;
 }
 
 input:not(:checked){
-  left: calc(1% + 25px);
+  width: 5%;
 }
 input:checked ~div.curtain__panel--left{
-     transform: translateX(0);
+  transform: translateX(0);
 }
 input:checked ~div.curtain__panel--right{
-     transform: translateX(0);
+  transform: translateX(0);
 }
 
 .curtain__panel {
   display: flex;
   align-items: center;
-  background: orange;
+  background: #4ac96b;
   box-sizing: border-box;
   color: #fff;
   float: left;
@@ -170,15 +173,15 @@ input:checked ~div.curtain__panel--right{
 }
 
 .curtain__panel--left {
-   justify-content: flex-end;
-   padding-right: 1em;
-   transform: translateX(-90%);
+  justify-content: flex-end;
+  padding-right: 0.3em;
+  transform: translateX(-90%);
 }
 
 .curtain__panel--right {
-   padding-left: 1em;
-   justify-content: flex-start;
-   transform: translateX(90%);
+  padding-left: 0.3em;
+  justify-content: flex-start;
+  transform: translateX(90%);
 }
 
 /* -------------------------- Behind the curtains ------------------------- */
@@ -187,7 +190,7 @@ input:checked ~div.curtain__panel--right{
   z-index: 1;
   width: 100%;
   height: 100vh;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1081%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='rgba(155%2c 255%2c 130%2c 1)'%3e%3c/rect%3e%3cpath d='M96.67801739302635 119.6141006708075L-44.24254185488226 185.3264366395925 21.469794113902736 326.2469958875011 162.39035336181135 260.5346599187161z' fill='rgba(28%2c 142%2c 42%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M662.53 380.47 a183.24 183.24 0 1 0 366.48 0 a183.24 183.24 0 1 0 -366.48 0z' fill='rgba(28%2c 142%2c 42%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M343.19050451459015 303.87731471838987L285.47373236725826 227.28457111962797 208.88098876849637 285.00134326695985 266.59776091582825 361.59408686572175z' fill='rgba(28%2c 142%2c 42%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M475.868733892402 222.61503262757557L318.4013316927495 174.4724164455509 270.2587155107248 331.9398186452034 427.7261177103773 380.0824348272281z' fill='rgba(28%2c 142%2c 42%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M907.86 422.16 a163.19 163.19 0 1 0 326.38 0 a163.19 163.19 0 1 0 -326.38 0z' fill='rgba(28%2c 142%2c 42%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M403.4620173857598 471.62543928756077L472.8819014664857 527.8405530023808 522.4946299983529 395.6031700238819z' fill='rgba(28%2c 142%2c 42%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M957.09 213.12 a112.04 112.04 0 1 0 224.08 0 a112.04 112.04 0 1 0 -224.08 0z' fill='rgba(28%2c 142%2c 42%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M1258.71 15.02 a174.06 174.06 0 1 0 348.12 0 a174.06 174.06 0 1 0 -348.12 0z' fill='rgba(28%2c 142%2c 42%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1081'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3cstyle%3e %40keyframes float1 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-10px%2c 0)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float1 %7b animation: float1 5s infinite%3b %7d %40keyframes float2 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-5px%2c -5px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float2 %7b animation: float2 4s infinite%3b %7d %40keyframes float3 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(0%2c -10px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float3 %7b animation: float3 6s infinite%3b %7d %3c/style%3e%3c/defs%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1108%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='rgba(62%2c 153%2c 211%2c 1)'%3e%3c/rect%3e%3cpath d='M0%2c387.607C71.987%2c391.811%2c135.397%2c343.792%2c193.463%2c301.035C248.651%2c260.397%2c302.86%2c213.271%2c324.892%2c148.373C346.064%2c86.01%2c319.691%2c20.57%2c310.834%2c-44.691C301.896%2c-110.552%2c313.441%2c-183.78%2c272.69%2c-236.287C231.417%2c-289.467%2c161.921%2c-317.366%2c94.84%2c-322.996C33.101%2c-328.178%2c-19.172%2c-285.09%2c-78.023%2c-265.722C-134.47%2c-247.145%2c-198.614%2c-249.771%2c-244.047%2c-211.468C-292.756%2c-170.403%2c-319.15%2c-109.76%2c-335.92%2c-48.298C-354.361%2c19.285%2c-374.894%2c94.207%2c-344.701%2c157.42C-314.597%2c220.447%2c-237.553%2c240.468%2c-179.467%2c279.257C-120.153%2c318.866%2c-71.203%2c383.449%2c0%2c387.607' fill='%23246d9c'%3e%3c/path%3e%3cpath d='M1440 1104.48C1540.545 1087.647 1572.794 955.152 1657.391 898.2660000000001 1739.251 843.221 1871.524 864.846 1922.216 780.221 1972.4270000000001 696.399 1939.561 583.084 1899.601 493.919 1864.498 415.592 1764.239 391.79200000000003 1716.247 320.63 1657.7930000000001 233.95499999999998 1688.583 81.36399999999998 1592.926 39.18299999999999 1501.26-1.2380000000000564 1411.565 108.84100000000001 1318.174 145.09699999999998 1234.413 177.615 1138.522 180.67200000000003 1072.233 241.32799999999997 1002.202 305.408 939.383 393.661 942.856 488.521 946.268 581.72 1050.591 635.312 1089.754 719.952 1128.621 803.952 1107.863 911.409 1170.189 979.835 1238.28 1054.591 1340.27 1121.1770000000001 1440 1104.48' fill='%2381bce2'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1108'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
   background-size: cover;
   color: #fff;
   display: flex;
