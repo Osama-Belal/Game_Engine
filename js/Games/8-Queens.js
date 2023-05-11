@@ -39,10 +39,17 @@ class Queens extends gameEngine{
 
       for (let j = 0; j < 8; j++) {
         const td = document.createElement('button');
-        if(state[i][j]) td.textContent = '\u265B'
         td.className = (i%2 === j%2 ? "white" : "grey")
         td.style.width = td.style.height = '1.3em'
         td.style.fontSize = '3em'
+        if(state[i][j]) td.textContent = '\u265B'
+        if(state[i][j] === -1) {
+          td.classList.add('invalid_cell')
+          setTimeout(() => {td.classList.remove('invalid_cell')}, 1000)
+          state[i][j] = 1
+        }
+        td.addEventListener('click', () => {
+          this.controller(state, String.fromCharCode('a'.charCodeAt(0) + j) + (i + 1))})
         tr.appendChild(td);
       }
       tr.style.display = 'flex'
@@ -64,23 +71,24 @@ class Queens extends gameEngine{
       console.log("Invalid Input!")
       return
     }
-    if(state[row][col]){
-      state[row][col] = 0;
-      return;
-    }
-    let queen = true
-    for (let i = 0; i < 8; i++)
-      for (let j = 0; j < 8; j++)
-        if(state[i][j])
-          if (i === row || j === col || Math.abs(i - j) === Math.abs(row - col) || i + j === row + col)
-            queen = false
 
-    if(queen){
-      state[row][col] = 1
-    }
+    if(state[row][col])
+      state[row][col] = 0
+
     else{
-      console.log("Invalid Move")
+      let queen = true
+      for (let i = 0; i < 8; i++)
+        for (let j = 0; j < 8; j++)
+          if (state[i][j])
+            if (i === row || j === col || i - j === row - col || i + j === row + col) {
+              queen = false
+              state[i][j] = -1
+            }
+      if(queen) state[row][col] = 1
+      else console.log("Invalid Move")
     }
+
+    this.drawer(state)
   }
 
 }

@@ -89,15 +89,13 @@ class sudoku extends gameEngine{
     }
 
     if(value === -1){
-      if(state[row][col].fixed)
-        console.log("Can't Delete Fixed Number")
+      if(state[row][col].fixed) console.log("Can't Delete Fixed Number")
       else state[row][col] = 0
-      return
     }
-
-    if (this.validate_input(state, row, col, value))
+    else if (this.validate_input(state, row, col, value))
       state[row][col] = {val: value, fixed: false}
     else console.log("Invalid Move")
+    this.drawer(state)
   }
   initialize_state() {
     this.state = {}
@@ -128,14 +126,18 @@ class sudoku extends gameEngine{
     // Check row
     let invalid = true;
     for (let j = 0; j < 9; j++) {
-      if (state[row][j] === value)
+      if (state[row][j].val === value) {
         invalid = false;
+        state[row][j].val += 10
+      }
     }
 
     // Check column
     for (let i = 0; i < 9; i++) {
-      if (state[i][col] === value)
+      if (state[i][col].val === value) {
         invalid = false;
+        state[i][col].val += 10
+      }
     }
 
     // Check box
@@ -143,8 +145,10 @@ class sudoku extends gameEngine{
     let boxCol = Math.floor(col / 3) * 3;console.log('bc', boxCol)
     for (let i = boxRow; i < boxRow + 3; i++) {
       for (let j = boxCol; j < boxCol + 3; j++) {
-        if (state[i][j] === value)
+        if (state[i][j].val === value) {
           invalid = false;
+          state[i][j].val += 10
+        }
       }
     }
     return invalid;
@@ -179,6 +183,11 @@ class sudoku extends gameEngine{
 
       for (let j = 0; j < 9; j++) {
         const td = document.createElement('button');
+        if(state[i][j].val > 9){
+          td.classList.add('invalid_cell')
+          setTimeout(() => {td.classList.remove('invalid_cell')}, 1000)
+          state[i][j].val -= 10
+        }
         td.textContent = state[i][j].val ? state[i][j].val : ''
         if (state[i][j].fixed) td.classList.add('tile-start')
         if(i===2 || i===5) td.classList.add('horizontal-line')
@@ -186,6 +195,10 @@ class sudoku extends gameEngine{
         td.classList.add('tile');
         td.style.width = td.style.height = '1.3em'
         td.style.fontSize = '3em'
+        td.addEventListener('click', () => {
+          const val = state[i][j].val ? -1 : prompt('Enter the number')
+          this.controller(state, (i+1) + ' ' + (j+1) + ' ' + val)
+        })
         tr.appendChild(td);
       }
       tr.style.display = 'flex'

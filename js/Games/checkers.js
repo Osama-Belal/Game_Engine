@@ -25,11 +25,11 @@ class checkers extends gameEngine{
     }
 
     const table = document.createElement("div");table.id = 'board'
-    const turn = document.createElement('div');turn.id = 'turn'
+    const turn = document.createElement('h1');turn.id = 'turn'
     turn.textContent = 'Turn: ' + (state['turn'] === 'r' ? 'Player 1' : 'Player 2')
-    turn.style.display = 'flex';turn.style.fontSize = '2em'
-    turn.style.justifyContent = 'center';turn.style.alignItems = 'center'
-    turn.style.color = state['turn'] === 'r' ? 'red' : 'cyan';
+    turn.style.textAlign = 'center';turn.style.fontSize = '2em'
+    turn.style.margin = '0'
+    turn.style.color = state['turn'] === 'r' ? '#e96767' : '#4dc5c5';
     table.appendChild(turn);
 
     const letters = document.createElement('div');
@@ -56,15 +56,19 @@ class checkers extends gameEngine{
         td.style.width = td.style.height = '1.3em'
         td.style.fontSize = '3em'
         if(state[i][j].player !== '-'){
-          if(state[i][j].player === 'r'|| state[i][j].player === 'c'){
-            td.textContent = "\u2689";
-          }
-          else if(state[i][j].player === 'R'|| state[i][j].player === 'C'){
-            td.textContent = "\u2689";
-          }
+          if(state[i][j].player === 'r'|| state[i][j].player === 'c') td.textContent = "\u2689";
+          else if(state[i][j].player === 'R'|| state[i][j].player === 'C') td.textContent = "\u2689";
           td.style.color = state[i][j].color
         }
         else td.textContent = ''
+        td.addEventListener('click', () => {
+          if(state[i][j].symbol !== '' || this.moves.length === 1)
+            this.moves.push(String.fromCharCode('a'.charCodeAt(0) + j) + (i + 1))
+          if(this.moves.length === 2){
+            this.controller(state, this.moves[0] + ' ' + this.moves[1])
+            this.moves = []
+          }
+        })
         tr.appendChild(td);
       }
       tr.style.display = 'flex'
@@ -145,6 +149,7 @@ class checkers extends gameEngine{
         state['turn'] = state['turn'] === 'r' ? 'c' : 'r';
       }
     }
+    this.drawer(state)
   }
 
   // Define how moves are validated

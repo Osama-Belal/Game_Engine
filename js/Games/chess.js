@@ -28,6 +28,12 @@ class chess extends gameEngine{
     }
 
     const table = document.createElement("div");table.id = 'board'
+    const turn = document.createElement('h1');turn.id = 'turn'
+    turn.textContent = 'Turn: ' + state['turn']
+    turn.style.textAlign = 'center';turn.style.fontSize = '2em'
+    turn.style.margin = '0'
+    table.appendChild(turn);
+
     const letters = document.createElement('div');
     for (let j = 0; j < 9; j++) {
       const td = document.createElement('button');
@@ -52,6 +58,14 @@ class chess extends gameEngine{
         td.style.width = td.style.height = '1.3em'
         td.style.fontSize = '3em'
         td.textContent = state[i][j].symbol
+        td.addEventListener('click', () => {
+          if(state[i][j].symbol !== '' || this.moves.length === 1)
+            this.moves.push(String.fromCharCode('a'.charCodeAt(0) + j) + (i + 1))
+          if(this.moves.length === 2){
+            this.controller(state, this.moves[0] + ' ' + this.moves[1])
+            this.moves = []
+          }
+        })
         tr.appendChild(td);
       }
       tr.style.display = 'flex'
@@ -90,6 +104,7 @@ class chess extends gameEngine{
       state[rowTo][colTo] = state[rowFrom][colFrom]
       state[rowFrom][colFrom] = emptyPiece
       state['turn'] = (state['turn'] === 'white' ? 'black' : 'white')
+      this.drawer(state)
     }
     else console.log("Invalid Move!")
   }

@@ -30,6 +30,7 @@ class connect_four extends gameEngine{
         td.style.borderRadius = '50%'
         td.style.margin = '0.3em'
         td.className = (state[i][j] !== '' ? state[i][j] : 'cyan')
+        td.addEventListener('click', () => {this.controller(state, j + 1 + '')})
         tr.appendChild(td);
       }
       tr.style.display = 'flex'
@@ -51,6 +52,7 @@ class connect_four extends gameEngine{
         console.log(i, input_val)
         state[i][input_val] = state['turn']
         state['turn'] = (state['turn'] === 'r' ? 'y' : 'r')
+        this.drawer(state)
         return;
       }
     }

@@ -10,7 +10,7 @@ body{
   font-family: 'Righteous', 'Chivo Mono', monospace;
 }
 
-#board button{border: none}
+#board button{border: none;transition: .4s ease-in-out}
 #board button:hover{opacity: .8}
 i.fas{display: block;transform: translateY(-15px)}
 
@@ -54,7 +54,7 @@ i.fas{display: block;transform: translateY(-15px)}
 .black{background: #333}
 .grey{background: #CCCCCCFF}
 .white{background: #EEE}
-.cyan{background: #ddf0f3}
+.cyan{background: #90d3dd}
 .blue{background: #0086d9}
 .green{background: #63de6e
 }
@@ -100,16 +100,16 @@ i.fas{display: block;transform: translateY(-15px)}
 
 .vertical-line {border-right: 2px solid black !important;}
 
-.invalid_cell{background: rgb(229, 114, 114);}
+.invalid_cell{background: rgb(229, 114, 114);color: #EEE}
 .large-button {font-size: 24px;}
 
-.x {color: #0086d9;}
-.o {color: #ff4646;}
+.x {color: #2c3e50;}
+.o {color: #18bc9c;}
 
 .r{background: #f64e4e;}
 .y{background: #f6f620;}
 .chess_label{width: 3.9em;height: 3.9em;color: #AAA}
-.tic_label{width: 13em;height: 2em;}
+.tic_label{width: 13em;height: 2em;color:#AAA}
 
 
 /*#menu:has(> button:active){*/

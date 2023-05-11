@@ -18,39 +18,37 @@ class tic_tac_toe extends gameEngine{
     }
 
     const table = document.createElement("div");table.id = 'board'
-    const numbers = document.createElement('div');
-    for (let j = 0; j < 4; j++) {
-      const td = document.createElement('button');
-      if(!j) {td.textContent = '';continue}
-      else td.textContent = j + ''
-      td.className = 'tic_label'
-      numbers.appendChild(td);
-    }
-    numbers.style.display = 'flex'
-    table.appendChild(numbers);
+    // const numbers = document.createElement('div');
+    // for (let j = 0; j < 4; j++) {
+    //   const td = document.createElement('button');
+    //   if(!j) {td.textContent = '';continue}
+    //   else td.textContent = j + ''
+    //   td.className = 'tic_label'
+    //   numbers.appendChild(td);
+    // }
+    // numbers.style.display = 'flex'
+    // table.appendChild(numbers);
 
     for (let i = 0; i < 3; i++) {
       const tr = document.createElement('div');
-      const numbers = document.createElement('button');
-      numbers.style.width = '1em'
-      numbers.style.paddingRight = '2em'
-      numbers.textContent = (i + 1) + ''
-      tr.appendChild(numbers)
+      // const numbers = document.createElement('button');
+      // numbers.style.width = '1em'
+      // numbers.style.paddingRight = '2em'
+      // numbers.textContent = (i + 1) + ''
+      // tr.appendChild(numbers)
 
       for (let j = 0; j < 3; j++) {
         const td = document.createElement('button');
         const span = document.createElement('span');
         span.textContent = state[i][j];
-        if(state[i][j] === 'x'|| state[i][j] === 'o'){
+        if(state[i][j] === 'x'|| state[i][j] === 'o')
           span.classList.add(state[i][j])
-        }
-        span.style.fontSize = '5em'
-        span.style.textShadow = '#777 3px 3px 4px'
+        span.style.fontSize = '8em'
 
-        td.className = 'cyan'
         td.style.width = td.style.height = '12em'
-        // td.style.fontSize = '3em'
-        td.style.border = '1px solid #EEE'
+        if(j < 2) td.style.borderRight = '10px solid #18bc9c'
+        if(i < 2) td.style.borderBottom = '10px solid #18bc9c'
+        td.addEventListener('click', () => {this.controller(state, (i+1) + ' ' + (j+1))})
         td.appendChild(span)
         tr.appendChild(td);
       }
@@ -80,6 +78,7 @@ class tic_tac_toe extends gameEngine{
     else{
       console.log("Invalid move")
     }
+    this.drawer(state)
   }
 
 }
