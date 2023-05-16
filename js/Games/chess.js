@@ -31,7 +31,7 @@ class chess extends gameEngine{
     const turn = document.createElement('h1');turn.id = 'turn'
     turn.textContent = 'Turn: ' + state['turn']
     turn.style.textAlign = 'center';turn.style.fontSize = '2em'
-    turn.style.margin = '0'
+    turn.style.margin = '0';turn.style.color = state['turn'] === 'white' ? '#333' : '#EEE'
     table.appendChild(turn);
 
     const letters = document.createElement('div');
@@ -72,6 +72,7 @@ class chess extends gameEngine{
       table.appendChild(tr);
     }
     document.body.appendChild(table);
+    document.body.style.backgroundColor = state['turn'] === 'white' ? '#FFF' : '#555'
   }
 
   controller(state, input) {
@@ -115,13 +116,12 @@ class chess extends gameEngine{
     const Fcolor = state[from.row][from.col].color
     const Tcolor = state[to.row][to.col].color
     if(Fcolor === Tcolor || state['turn'] !== Fcolor) return false;
-
     const name = state[from.row][from.col].name
     switch (name){
-      case 'rook': return this.move_rook(from, to)
+      case 'rook': return this.move_rook(state, from, to)
       case 'knight': return this.move_knight(from, to)
-      case 'bishop': return this.move_bishop(from, to)
-      case 'queen': return this.move_queen(from, to)
+      case 'bishop': return this.move_bishop(state, from, to)
+      case 'queen': return this.move_queen(state, from, to)
       case 'king': return this.move_king(from, to)
       case 'pawn': return this.move_pawn(from, to, Fcolor, Tcolor)
     }
@@ -132,21 +132,49 @@ class chess extends gameEngine{
     return ((Math.abs(to.row - from.row) <= 1) && (Math.abs(to.col - from.col) <= 1))
   }
 
-  move_queen(from, to){
-    return this.move_rook(from, to) || this.move_bishop(from, to)
+  move_queen(state, from, to){
+    return this.move_rook(state, from, to) || this.move_bishop(state, from, to)
   }
 
-  move_rook(from, to){
-    return (from.row === to.row || from.col === to.col)
+  move_rook(state, from, to){
+    if(from.col === to.col) {
+      for (let i = Math.min(from.row, to.row) + 1; i < Math.max(from.row, to.row); i++)
+        if (state[i][to.col].color !== '') {console.log(i, to.col);return false}
+      return true
+    }
+    else if(from.row === to.row) {
+      for (let i = Math.min(from.col, to.col) + 1; i < Math.max(from.col, to.col); i++)
+        if (state[to.row][i].color !== '') {console.log(to.row, i);return false}
+      return true
+    }
+    else return false
   }
 
   move_knight(from, to){
     return ((Math.abs(to.row - from.row) === 2 && Math.abs(to.col - from.col) === 1) ||
-    (Math.abs(to.row - from.row) === 1 && Math.abs(to.col - from.col) === 2))
+      (Math.abs(to.row - from.row) === 1 && Math.abs(to.col - from.col) === 2))
   }
-  move_bishop(from, to){
-    return Math.abs(to.row - from.row) === Math.abs(to.col - from.col) ||
-           from.row + from.col === to.row + to.col
+  move_bishop(state, from, to){
+    const dx = Math.abs(to.row - from.row); // horizontal distance
+    const dy = Math.abs(to.col - from.col); // vertical distance
+
+    if (dx !== dy) return false;
+
+    const stepX = to.row > from.row ? 1 : -1; // direction on x-axis
+    const stepY = to.col > from.col ? 1 : -1; // direction on y-axis
+
+    let x = from.row + stepX;
+    let y = from.col + stepY;
+
+    // Check if there are any pieces in the path
+    while (x !== to.row && y !== to.col) {
+      if (state[x][y].color !== '')
+        return false
+      x += stepX
+      y += stepY
+    }
+
+    return true;
   }
 
   move_pawn(from, to, from_color, to_color) {

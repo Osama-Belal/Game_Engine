@@ -75,6 +75,7 @@ class checkers extends gameEngine{
       table.appendChild(tr);
     }
     document.body.appendChild(table);
+    document.body.style.backgroundColor = state['turn'] === 'r' ? 'rgba(255,60,60,0.37)' : '#9af3ef'
   }
 
 

@@ -2,6 +2,7 @@ games = ['chess', 'checkers', 'tic tac toe', 'connect four','8 Queens','sudoku']
 gamesIcons = ['chess', 'dot-circle', 'times', 'dice-six','chess-queen','sort-numeric-up-alt']
 
 function startGame(name) {
+  document.body.style.background = '#FFF'
   const body = document.getElementById('body')
   if(body) body.style.right = '99%'
 
