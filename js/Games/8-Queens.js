@@ -1,20 +1,64 @@
 class Queens extends gameEngine{
+  session
   constructor() {
     const state = {}
     for (let i = 0; i < 8; i++) {
       state[i] = []
-      for (let j = 1; j <= 8; j++) {
+      for (let j = 0; j < 8; j++) {
         state[i][j] = 0
       }
     }
     super(state);
+    const Eight_Queens = `
+:- use_module(library(clpfd)).
+:- use_module(library(lists)).
+
+% Predicate to solve the N-queens problem
+n_queens(N, Solution) :-
+    length(Solution, N),
+    queens(Solution, N),
+    safe_queens(Solution).
+
+n_queens(N, Partial, Solution) :-
+    length(Solution, N),
+    queens(Solution, N),
+    sublist(Partial, Solution),
+    safe_queens(Solution).
+
+% Sublist for partial solution
+sublist(A, B) :-
+    append(Before, After, B),
+    append(Useless, A, Before).
+
+% Predicate to place the queens on the board
+queens([], _).
+queens([Col|Cols], N) :-
+    queens(Cols, N),
+    between(1, N, Col).
+
+% Predicate to check if a queen is safe from attacks
+safe_queens([]).
+safe_queens([Col|Cols]) :-
+    safe_queen(Col, Cols, 1),
+    safe_queens(Cols).
+
+% Predicate to check if a queen is safe from attacks
+safe_queen(_, [], _).
+safe_queen(Col, [Col2|Cols], Offset) :-
+    Col =\\= Col2,
+    Offset2 is Offset + 1,
+    abs(Col - Col2) =\\= Offset,
+    safe_queen(Col, Cols, Offset2).
+`
+    this.session = pl.create()
+    this.session.consult(Eight_Queens);
   }
 
   drawer(state){
     super.drawer(state)
     while (true) {
-      const board = document.getElementById('board')
-      if (board) board.remove()
+      const solve = document.getElementById('solve');if (solve) solve.remove()
+      const board = document.getElementById('board');if (board) board.remove()
       else break;
     }
 
@@ -55,7 +99,51 @@ class Queens extends gameEngine{
       tr.style.display = 'flex'
       table.appendChild(tr);
     }
+
+    const solve = document.createElement('button')
+    solve.id = 'solve';solve.textContent = 'Solve'
+    solve.addEventListener('click', () => this.solve(state, this.session, this.drawer.bind(this)))
+    document.body.appendChild(solve)
     document.body.appendChild(table);
+  }
+
+  solve(state, session, drawingCallback){
+    let n = 6
+    function buildState(){
+      let cur = '['
+      for (let i = 0; i < n; i++) {
+        let c = '_'
+        for (let j = 0; j < n; j++)
+          if (state[i][j]) c = (j+1) + ''
+        cur += i !== n-1 ? c + ',' : c
+      }
+      cur += ']'
+      console.log(cur)
+      return cur === '[_,_,_,_,_,_,_,_]' ? "n_queens("+n+", Board)." : "n_queens("+n+"," + cur + ",Board)."
+    }
+    function get_all_answers(query, session){
+      session.answer({
+        success: function (answer) {
+          let sol = session.format_answer(answer)
+          const matches = sol.match(/\d+/g); // Match one or more digits
+          const array = matches.map(Number); // Convert matched strings to numbers
+          for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) state[i][j] = 0
+          for (let i = 0; i < array.length; i++) state[i][array[i] - 1] = 1;
+          console.log(sol)
+          drawingCallback(state)
+        },
+        fail: function () {
+          alert("No more answers")
+          session.query(query, {
+            success: function (goal) {console.log("Query is correct!", goal)},
+            error: function (err) {console.log("Error while query!", err)},
+          });
+          get_all_answers(query, session)
+        },
+        error: function (err) {alert("Error occurred while querying!" + err)},
+      });
+    }
+    get_all_answers(buildState(), session)
   }
 
   controller(state, input){

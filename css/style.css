@@ -59,9 +59,8 @@ i.fas{display: block;transform: translateY(-15px)}
 .green{background: #63de6e
 }
 
-#exit{
+#exit, #solve{
   position: absolute;
-  bottom: 1em;
   right: 2em;
   font-size: 1.4em;
   font-family: 'Chivo Mono', sans-serif;
@@ -76,7 +75,11 @@ i.fas{display: block;transform: translateY(-15px)}
   font-weight: bolder;
 }
 
-#exit:active{
+#solve{top: 1em;}
+#exit{bottom: 1em;}
+
+#exit:active,
+#solve:active{
   box-shadow: 0 0.1em #2e482e;
   transform: translateY(10px);
 }

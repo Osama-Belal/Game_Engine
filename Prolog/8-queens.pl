@@ -1,3 +1,16 @@
+:- use_module(library(clpfd)).
+
+between(Start, End, Start) :- Start =< End.
+between(Start, End, Value) :-
+  Start < End,
+  NextStart is Start + 1,
+  between(NextStart, End, Value).
+
+length([], 0).
+length([_|T], N) :-
+    length(T, N1),
+    N is N1 + 1.
+
 % Predicate to solve the N-queens problem
 n_queens(N, Solution) :-
     length(Solution, N),
