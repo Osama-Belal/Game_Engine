@@ -10,28 +10,52 @@ class Queens extends gameEngine{
     }
     super(state);
     const Eight_Queens = `
-ls(Xs, Ys) :- append(As, XsBs, Ys), append(Xs, Bs, XsBs).
-solution(Qs) :-
-    length(Qs, 8),
-    ls([0], Qs),
-    ls([1], Qs),
-    ls([2], Qs),
-    ls([3], Qs),
-    ls([4], Qs),
-    ls([5], Qs),
-    ls([6], Qs),
-    ls([7], Qs),
-    safe_queens(Qs).
+    :- use_module(library(clpfd)).
+    :- use_module(library(lists)).
 
-safe_queens([]).
-safe_queens([Q|Qs]) :- safe_queens(Qs, Q, 1), safe_queens(Qs).
+    % Predicate to solve the N-queens problem
+    n_queens(N, Solution) :-
+        length(Solution, N),
+        all_queens(Solution, N),
+        safe_queens(Solution).
 
-safe_queens([], _, _).
-safe_queens([Q|Qs], Q0, D0) :-
-        Q0 =\= Q,
-        abs(Q0 - Q) =\= D0,
-        D1 = D0 + 1,
-        safe_queens(Qs, Q0, D1).
+    n_queens(N, Partial, Solution) :-
+        length(Solution, N),
+        all_queens(Solution, N),
+        sublist(Partial, Solution),
+        safe_queens(Solution).
+
+
+    % Sublist for partial solution
+    sublist(A, B) :-
+        append(Before, After, B),
+        append(Useless, A, Before).
+
+
+    % Predicate to place the queens on the board
+    all_queens(Solution, N):-
+        sublist([1], Solution),
+        sublist([2], Solution),
+        sublist([3], Solution),
+        sublist([4], Solution),
+        sublist([5], Solution),
+        sublist([6], Solution),
+        sublist([7], Solution),
+        sublist([8], Solution).
+
+
+    % Predicate to check if a queen is safe from attacks
+    safe_queens([]).
+    safe_queens([Col|Cols]) :-
+      safe_queens(Cols, Col, 1),
+      safe_queens(Cols).
+
+    safe_queens([], _, _).
+    safe_queens([First|Other], Col, Offset) :-
+            Col =\\= First,
+            abs(Col - First) =\\= Offset,
+            Next = Offset + 1,
+            safe_queens(Other, Col, Next).
 `
     this.session = pl.create()
     this.session.consult(Eight_Queens);
@@ -91,7 +115,7 @@ safe_queens([Q|Qs], Q0, D0) :-
   }
 
   solve(state, session, drawingCallback){
-    let n = 6
+    let n = 8
     function buildState(){
       let cur = '['
       for (let i = 0; i < n; i++) {
