@@ -117,7 +117,7 @@ safe_queens([Q|Qs], Q0, D0) :-
         },
         fail: function () {
           alert("No more answers")
-          session.query(query, {
+          session.query("solution(M).", {
             success: function (goal) {console.log("Query is correct!", goal)},
             error: function (err) {console.log("Error while query!", err)},
           });
