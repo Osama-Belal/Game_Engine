@@ -146,7 +146,7 @@ class Queens extends gameEngine{
         },
         fail: function () {
           alert("No more answers")
-          session.query("solution(M).", {
+          session.query(query, {
             success: function (goal) {console.log("Query is correct!", goal)},
             error: function (err) {console.log("Error while query!", err)},
           });
