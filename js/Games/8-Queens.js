@@ -10,45 +10,28 @@ class Queens extends gameEngine{
     }
     super(state);
     const Eight_Queens = `
-:- use_module(library(clpfd)).
-:- use_module(library(lists)).
+ls(Xs, Ys) :- append(As, XsBs, Ys), append(Xs, Bs, XsBs).
+solution(Qs) :-
+    length(Qs, 8),
+    ls([0], Qs),
+    ls([1], Qs),
+    ls([2], Qs),
+    ls([3], Qs),
+    ls([4], Qs),
+    ls([5], Qs),
+    ls([6], Qs),
+    ls([7], Qs),
+    safe_queens(Qs).
 
-% Predicate to solve the N-queens problem
-n_queens(N, Solution) :-
-    length(Solution, N),
-    queens(Solution, N),
-    safe_queens(Solution).
-
-n_queens(N, Partial, Solution) :-
-    length(Solution, N),
-    queens(Solution, N),
-    sublist(Partial, Solution),
-    safe_queens(Solution).
-
-% Sublist for partial solution
-sublist(A, B) :-
-    append(Before, After, B),
-    append(Useless, A, Before).
-
-% Predicate to place the queens on the board
-queens([], _).
-queens([Col|Cols], N) :-
-    queens(Cols, N),
-    between(1, N, Col).
-
-% Predicate to check if a queen is safe from attacks
 safe_queens([]).
-safe_queens([Col|Cols]) :-
-    safe_queen(Col, Cols, 1),
-    safe_queens(Cols).
+safe_queens([Q|Qs]) :- safe_queens(Qs, Q, 1), safe_queens(Qs).
 
-% Predicate to check if a queen is safe from attacks
-safe_queen(_, [], _).
-safe_queen(Col, [Col2|Cols], Offset) :-
-    Col =\\= Col2,
-    Offset2 is Offset + 1,
-    abs(Col - Col2) =\\= Offset,
-    safe_queen(Col, Cols, Offset2).
+safe_queens([], _, _).
+safe_queens([Q|Qs], Q0, D0) :-
+        Q0 =\= Q,
+        abs(Q0 - Q) =\= D0,
+        D1 = D0 + 1,
+        safe_queens(Qs, Q0, D1).
 `
     this.session = pl.create()
     this.session.consult(Eight_Queens);
