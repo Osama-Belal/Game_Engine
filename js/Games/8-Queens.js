@@ -99,6 +99,11 @@ class Queens extends gameEngine{
           setTimeout(() => {td.classList.remove('invalid_cell')}, 1000)
           state[i][j] = 1
         }
+        if(state[i][j] === 2) {
+          td.classList.add('new_cell')
+          setTimeout(() => {td.classList.remove('new_cell')}, 400)
+          state[i][j] = 1
+        }
         td.addEventListener('click', () => {
           this.controller(state, String.fromCharCode('a'.charCodeAt(0) + j) + (i + 1))})
         tr.appendChild(td);
@@ -110,7 +115,7 @@ class Queens extends gameEngine{
     const solve = document.createElement('button')
     solve.id = 'solve';solve.textContent = 'Solve'
     solve.addEventListener('click', () => this.solve(state, this.session, this.drawer.bind(this)))
-    document.body.appendChild(solve)
+    table.appendChild(solve)
     document.body.appendChild(table);
   }
 
@@ -135,7 +140,7 @@ class Queens extends gameEngine{
           const matches = sol.match(/\d+/g); // Match one or more digits
           const array = matches.map(Number); // Convert matched strings to numbers
           for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) state[i][j] = 0
-          for (let i = 0; i < array.length; i++) state[i][array[i] - 1] = 1;
+          for (let i = 0; i < array.length; i++) state[i][array[i] - 1] = 2
           console.log(sol)
           drawingCallback(state)
         },
@@ -179,7 +184,7 @@ class Queens extends gameEngine{
               queen = false
               state[i][j] = -1
             }
-      if(queen) state[row][col] = 1
+      if(queen) state[row][col] = 2
       else console.log("Invalid Move")
     }
 

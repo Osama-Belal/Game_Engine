@@ -10,8 +10,8 @@ body{
   font-family: 'Righteous', 'Chivo Mono', monospace;
 }
 
-#board button{border: none;transition: .4s ease-in-out}
-#board button:hover{border: 1px solid #aeff89}
+#board button:not(#solve){border: none;transition: .4s ease-in-out}
+#board button:hover:not(#solve){border: 1px solid #aeff89}
 i.fas{display: block;transform: translateY(-15px)}
 
 #menu button{
@@ -104,6 +104,7 @@ i.fas{display: block;transform: translateY(-15px)}
 .vertical-line {border-right: 2px solid black !important;}
 
 .invalid_cell{background: rgb(229, 114, 114);color: #EEE}
+.new_cell{background: rgb(103, 227, 114);color: #111}
 .large-button {font-size: 24px;}
 
 .x {color: #2c3e50;}
