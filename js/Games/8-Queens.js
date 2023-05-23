@@ -121,6 +121,15 @@ class Queens extends gameEngine{
 
   solve(state, session, drawingCallback){
     let n = 8
+    function formatSolution(state, answer){
+      let sol = session.format_answer(answer)
+      const matches = sol.match(/\d+/g); // Match one or more digits
+      const array = matches.map(Number); // Convert matched strings to numbers
+      for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) state[i][j] = 0
+      for (let i = 0; i < array.length; i++) state[i][array[i] - 1] = 2
+      console.log(sol)
+      drawingCallback(state)
+    }
     function buildState(){
       let cur = '['
       for (let i = 0; i < n; i++) {
@@ -135,24 +144,21 @@ class Queens extends gameEngine{
     }
     function get_all_answers(query, session){
       session.answer({
-        success: function (answer) {
-          let sol = session.format_answer(answer)
-          const matches = sol.match(/\d+/g); // Match one or more digits
-          const array = matches.map(Number); // Convert matched strings to numbers
-          for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) state[i][j] = 0
-          for (let i = 0; i < array.length; i++) state[i][array[i] - 1] = 2
-          console.log(sol)
-          drawingCallback(state)
-        },
+        success: function (answer) {formatSolution(state, answer)},
+        error: function (err) {alert("Error occurred while querying!" + err)},
         fail: function () {
           alert("No more answers")
           session.query(query, {
             success: function (goal) {console.log("Query is correct!", goal)},
             error: function (err) {console.log("Error while query!", err)},
           });
-          get_all_answers(query, session)
+          // get_all_answers(query, session)
+          session.answer({
+            success: function (answer) {formatSolution(state, answer)},
+            fail: function () {alert("No more answers")},
+            error: function (err) {alert("Error occurred while querying!" + err)},
+          });
         },
-        error: function (err) {alert("Error occurred while querying!" + err)},
       });
     }
     get_all_answers(buildState(), session)
