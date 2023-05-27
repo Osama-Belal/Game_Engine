@@ -1,4 +1,5 @@
 class sudoku extends gameEngine{
+  session
   constructor() {
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -71,8 +72,32 @@ class sudoku extends gameEngine{
       for(let j = 0;j < 9;j++)
         state[i][j] = board[i][j] ? {val: board[i][j], fixed: true} : {val: 0, fixed: false}
     }
-    console.log(state)
     super(state);
+    const Sudoku = `
+    :-use_module(library(chr)).
+    :- use_module(library(clpfd)).
+    :- use_module(library(lists)).
+    sudoku(Rows) :-
+            length(Rows, 9),
+            maplist(same_length(Rows), Rows),
+            append(Rows, Vs),
+            Vs ins 1..9,
+            maplist(all_distinct, Rows),
+            transpose(Rows, Columns),
+            maplist(all_distinct, Columns),
+            Rows = [As,Bs,Cs,Ds,Es,Fs,Gs,Hs,Is],
+            blocks(As, Bs, Cs),
+            blocks(Ds, Es, Fs),
+            blocks(Gs, Hs, Is).
+    blocks([], [], []).
+    blocks([N1,N2,N3|Ns1],
+           [N4,N5,N6|Ns2],
+           [N7,N8,N9|Ns3]) :-
+           all_distinct([N1,N2,N3,N4,N5,N6,N7,N8,N9]),
+           blocks(Ns1, Ns2, Ns3).
+`
+    this.session = pl.create()
+    this.session.consult(Sudoku);
   }
 
   controller(state, input) {
@@ -204,7 +229,59 @@ class sudoku extends gameEngine{
       tr.style.display = 'flex'
       table.appendChild(tr);
     }
+    const solve = document.createElement('button')
+    solve.id = 'solve';solve.textContent = 'Solve'
+    solve.addEventListener('click', () => this.solve(state, this.session, this.drawer.bind(this)))
+    table.appendChild(solve)
     document.body.appendChild(table);
   }
 
+
+  solve(state, session, drawingCallback){
+    let n = 9
+    function formatSolution(state, answer){
+      let sol = session.format_answer(answer)
+      // const matches = sol.match(/\d+/g); // Match one or more digits
+      // const array = matches.map(Number); // Convert matched strings to numbers
+      // for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) state[i][j].val = 0
+      // for (let i = 0; i < array.length; i++) state[i][array[i] - 1] = 2
+      console.log(sol)
+      drawingCallback(state)
+    }
+    function buildState(){
+      let cur = '['
+      for (let i = 0; i < n; i++) {
+        cur += '['
+        for (let j = 0; j < n; j++) {
+          cur += (state[i][j].val ? state[i][j].val + '' : '_')
+          if(j !== n-1) cur += ','
+        }
+        cur += ']'
+        if(i !== n-1) cur += ','
+      }
+      cur += ']'
+      console.log("Rows = " + cur + ",sudoku(Rows),maplist(label, Rows).")
+      return "Rows = " + cur + ",sudoku(Rows),maplist(label, Rows)."
+    }
+    function get_all_answers(query, session){
+      session.answer({
+        success: function (answer) {formatSolution(state, answer)},
+        error: function (err) {alert("Error occurred while querying!" + err)},
+        fail: function () {
+          alert("No more answers")
+          session.query(query, {
+            success: function (goal) {console.log("Query is correct!", goal)},
+            error: function (err) {console.log("Error while query!", err)},
+          });
+          // get_all_answers(query, session)
+          session.answer({
+            success: function (answer) {formatSolution(state, answer)},
+            fail: function () {alert("No more answers")},
+            error: function (err) {alert("Error occurred while querying!" + err)},
+          });
+        },
+      });
+    }
+    get_all_answers(buildState(), session)
+  }
 }
